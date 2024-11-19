@@ -1,4 +1,5 @@
 import 'package:authclase/pages/pets_details.dart';
+import 'package:authclase/pages/pets_page.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:authclase/services/store_services.dart';
@@ -89,7 +90,7 @@ class PersonDetailsScreen extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => PetDetailsScreen(
+                                  builder: (context) => PetDetailsScreenDos(
                                       petId: petsData[index].id),
                                 ),
                               );

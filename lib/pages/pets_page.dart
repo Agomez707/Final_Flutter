@@ -1,49 +1,68 @@
+import 'package:authclase/components/formatted_date.dart';
+import 'package:authclase/pages/add_Vacuna_page.dart';
+import 'package:authclase/pages/add_mediacal_history_page.dart';
+import 'package:authclase/pages/edit_medical_history.dart';
+import 'package:authclase/pages/edit_vacuna.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:authclase/services/store_services.dart';
 
-class PetDetailsScreenDos extends StatelessWidget {
+class PetDetailsScreenDos extends StatefulWidget {
   final String petId;
-  final FirebaseService _firebaseService = FirebaseService();
 
-  PetDetailsScreenDos({Key? key, required this.petId}) : super(key: key);
+  PetDetailsScreenDos({
+    super.key, 
+    required this.petId
+    });
+
+  @override
+  State<PetDetailsScreenDos> createState() => _PetDetailsScreenState();
+}
+
+class _PetDetailsScreenState extends State<PetDetailsScreenDos> {
+  final FirebaseService _firebaseService = FirebaseService();
+  int _currentTabIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3, // Número de pestañas
+      length: 4, // Número de pestañas
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Detalles de la Mascota'),
+          title: const Text('Detalles de la Mascota'),
           bottom: TabBar(
-            indicatorColor: const Color.fromARGB(255, 30, 1, 97), // Color de la línea indicadora
-            labelColor: const Color.fromARGB(255, 0, 0, 0), // Color del texto seleccionado
-            unselectedLabelColor: Colors.grey, // Color del texto no seleccionado
-            tabs: [
+            onTap: (index) {
+              setState(() {
+                _currentTabIndex = index;
+              });
+            },
+            tabs: const [
               Tab(text: 'Detalles', icon: Icon(Icons.info_outline)),
               Tab(text: 'Vacunas', icon: Icon(Icons.vaccines)),
-              Tab(text: 'Historial Médico', icon: Icon(Icons.history)),
+              Tab(text: 'Historial', icon: Icon(Icons.history)),
+              Tab(text: 'Turnos', icon: Icon(Icons.note_add)),
             ],
+            labelColor: const Color.fromARGB(255, 119, 1, 134),
           ),
         ),
         body: TabBarView(
           children: [
             // Pestaña de Detalles
             FutureBuilder<DocumentSnapshot>(
-              future: _firebaseService.getPetDetails(petId),
+              future: _firebaseService.getPetDetails(widget.petId),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
                 if (snapshot.hasError) {
-                  return Center(
+                  return const Center(
                       child:
                           Text('Error al cargar los detalles de la mascota'));
                 }
 
                 final petData = snapshot.data?.data() as Map<String, dynamic>?;
                 if (petData == null) {
-                  return Center(
+                  return const Center(
                       child:
                           Text('No se encontró la información de la mascota'));
                 }
@@ -68,21 +87,25 @@ class PetDetailsScreenDos extends StatelessWidget {
                                 height: 200, fit: BoxFit.cover)
                             : const Icon(Icons.pets, size: 100),
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       Text('Nombre: $petName',
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold)),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text('Especie: $petSpecies',
-                          style: TextStyle(fontSize: 16)),
-                      SizedBox(height: 8),
-                      Text('Raza: $petBreed', style: TextStyle(fontSize: 16)),
-                      SizedBox(height: 8),
-                      Text('Edad: $petAge', style: TextStyle(fontSize: 16)),
-                      SizedBox(height: 8),
-                      Text('Sexo: $petSex', style: TextStyle(fontSize: 16)),
-                      SizedBox(height: 8),
-                      Text('Color: $petColor', style: TextStyle(fontSize: 16)),
+                          style: const TextStyle(fontSize: 16)),
+                      const SizedBox(height: 8),
+                      Text('Raza: $petBreed',
+                          style: const TextStyle(fontSize: 16)),
+                      const SizedBox(height: 8),
+                      Text('Edad: $petAge',
+                          style: const TextStyle(fontSize: 16)),
+                      const SizedBox(height: 8),
+                      Text('Sexo: $petSex',
+                          style: const TextStyle(fontSize: 16)),
+                      const SizedBox(height: 8),
+                      Text('Color: $petColor',
+                          style: const TextStyle(fontSize: 16)),
                     ],
                   ),
                 );
@@ -91,31 +114,99 @@ class PetDetailsScreenDos extends StatelessWidget {
 
             // Pestaña de Vacunas
             StreamBuilder<QuerySnapshot>(
-              stream: _firebaseService.getVaccinesStream(petId),
+              stream: _firebaseService.getVaccinesStream(widget.petId),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
                 if (snapshot.hasError) {
-                  return Center(child: Text('Error al cargar las vacunas'));
+                  return const Center(
+                      child: Text('Error al cargar las vacunas'));
                 }
 
                 final vaccinesData = snapshot.data?.docs;
                 if (vaccinesData == null || vaccinesData.isEmpty) {
-                  return Center(child: Text('No hay vacunas registradas'));
+                  return const Center(
+                      child: Text('No hay vacunas registradas'));
                 }
 
                 return ListView.builder(
                   itemCount: vaccinesData.length,
                   itemBuilder: (context, index) {
                     final vaccine = vaccinesData[index];
+                    final vaccineId = vaccine.id;
                     final vaccineName = vaccine['name'] ?? 'Sin nombre';
-                    final vaccineDate = vaccine['date'] ?? 'Fecha desconocida';
+                    final vaccineDate = formatDate(vaccine['date']);
+                    final vaccineNextDate =
+                        formatDate(vaccine['next_due_date']);
 
                     return ListTile(
                       title: Text(vaccineName),
-                      subtitle: Text('Fecha: $vaccineDate'),
-                      leading: Icon(Icons.vaccines),
+                      subtitle: Text(
+                          'Aplicada el: $vaccineDate\nSiguiente Dosis: $vaccineNextDate'),
+                      leading: const Icon(Icons.vaccines),
+                      //menu desplegable para opciones Editar y Eliminar
+                      trailing: PopupMenuButton(
+                        onSelected: (value) async {
+                          if (value == 'edit') {
+                            // Ir a la pantalla de edición
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditVaccineScreen(
+                                  petId: widget.petId,
+                                  vaccineId: vaccineId,
+                                  initialData: {
+                                    'name': vaccineName,
+                                    'date': vaccine['date'],
+                                    'next_due_date': vaccine['next_due_date'],
+                                  },
+                                ),
+                              ),
+                            );
+                          } else if (value == 'delete') {
+                            final confirm = await showDialog<bool>(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Center( child: Text('Confirmar eliminación')),
+                                content: const Text(
+                                    '¿Está seguro de que desea eliminar esta vacuna?'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, false),
+                                    child: const Text('Cancelar'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, true),
+                                    child: const Text('Eliminar'),
+                                  ),
+                                ],
+                              ),
+                            );
+                            if (confirm == true) {
+                              await FirebaseService()
+                                  .deleteVaccine(widget.petId, vaccineId);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Vacuna eliminada')),
+                              );
+                            }
+                          }
+                        },
+                        //opciones de menu desplegable
+                        itemBuilder: (context) => const [
+                          PopupMenuItem(
+                            value: 'edit',
+                            child: Text('Editar'),
+                          ),
+                          PopupMenuItem(
+                            value: 'delete',
+                            child: Text('Eliminar'),
+                          ),
+                        ],
+                      ),
                     );
                   },
                 );
@@ -124,19 +215,19 @@ class PetDetailsScreenDos extends StatelessWidget {
 
             // Pestaña de Historial Médico
             StreamBuilder<QuerySnapshot>(
-              stream: _firebaseService.getMedicalHistoryStream(petId),
+              stream: _firebaseService.getMedicalHistoryStream(widget.petId),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
                 if (snapshot.hasError) {
-                  return Center(
+                  return const Center(
                       child: Text('Error al cargar el historial médico'));
                 }
 
                 final historyData = snapshot.data?.docs;
                 if (historyData == null || historyData.isEmpty) {
-                  return Center(
+                  return const Center(
                       child: Text('No hay historial médico registrado'));
                 }
 
@@ -144,21 +235,119 @@ class PetDetailsScreenDos extends StatelessWidget {
                   itemCount: historyData.length,
                   itemBuilder: (context, index) {
                     final record = historyData[index];
+                    final recordId = record.id;
+                    final reason = record['reason'] ?? 'Sin diagnóstico';
                     final diagnosis = record['diagnosis'] ?? 'Sin diagnóstico';
                     final treatment = record['treatment'] ?? 'Sin tratamiento';
-                    final date = record['date'] ?? 'Fecha desconocida';
+                    final notes = record['notes'] ?? 'Sin diagnóstico';
+                    final date = formatDate(record['date']);
 
                     return ListTile(
-                      title: Text(diagnosis),
-                      subtitle: Text('Tratamiento: $treatment\nFecha: $date'),
-                      leading: Icon(Icons.history),
+                      title: Text(reason),
+                      subtitle: Text(
+                          'Diagnostico: $diagnosis\nTratamiento: $treatment\nFecha: $date\nNota: $notes'),
+                      leading: const Icon(Icons.history),
+                      trailing: PopupMenuButton(
+                        onSelected: (value) async {
+                          if (value == 'edit') {
+                            // Ir a la pantalla de edición
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditMedicalRecordScreen(
+                                  petId: widget.petId,
+                                  recordId: recordId,
+                                  initialData: {
+                                    'reason': reason,
+                                    'diagnosis': diagnosis,
+                                    'treatment': treatment,
+                                    'notes': notes,
+                                    'date': date,
+                                  },                                  
+                                ),
+                              ),
+                            );
+
+
+                          } else if (value == 'delete') {
+                            final confirm = await showDialog<bool>(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Center( child: Text('Confirmar eliminación')),
+                                content: const Text(
+                                    '¿Está seguro de que desea eliminar este Historial?'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, false),
+                                    child: const Text('Cancelar'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, true),
+                                    child: const Text('Eliminar'),
+                                  ),
+                                ],
+                              ),
+                            );
+                            if (confirm == true) {
+                              await FirebaseService()
+                                  .deleteRecord(widget.petId, recordId);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Historial eliminada')),
+                              );
+                            }
+                          }
+                        },
+                        //opciones de menu desplegable
+                        itemBuilder: (context) => const [
+                          PopupMenuItem(
+                            value: 'edit',
+                            child: Text('Editar'),
+                          ),
+                          PopupMenuItem(
+                            value: 'delete',
+                            child: Text('Eliminar'),
+                          ),
+                        ],
+                      ),
                     );
                   },
                 );
               },
             ),
+            Scaffold(),
           ],
         ),
+        floatingActionButton: _currentTabIndex == 1 ||
+                _currentTabIndex == 2 ||
+                _currentTabIndex == 3
+            ? FloatingActionButton(
+                onPressed: () {
+                  if (_currentTabIndex == 1) {
+                    // Acción para añadir una vacuna
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            AddVaccineScreen(petId: widget.petId),
+                      ),
+                    );
+                  } else if (_currentTabIndex == 2) {
+                    // Acción para añadir un registro médico
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            AddMedicalRecordScreen(petId: widget.petId),
+                      ),
+                    );
+                  }
+                },
+                child: const Icon(Icons.add),
+              )
+            : null,
       ),
     );
   }

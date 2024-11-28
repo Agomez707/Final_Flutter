@@ -28,14 +28,7 @@ class FirebaseService {
     return firestore.collection('pets').doc(petId).get();
   }
 
-    // Función para obtener el stream de la subcolección de vacunas
-  Stream<QuerySnapshot> getVaccinesStream(String petId) {
-    return firestore
-        .collection('pets')
-        .doc(petId)
-        .collection('vaccinations')
-        .snapshots();
-  }
+  //Historial Medico
 
   // Función para obtener el stream de la subcolección de historial médico
   Stream<QuerySnapshot> getMedicalHistoryStream(String petId) {
@@ -45,4 +38,68 @@ class FirebaseService {
         .collection('medical_history')
         .snapshots();
   }
+  
+  //Función para agregar Hitorial medicos
+  Future<void> addMedicalRecord(String petId, Map<String, dynamic> data) async {
+    await firestore.collection('pets').doc(petId).collection('medical_history').add(data);
+  }
+
+   // Eliminar Historial Medico
+  Future<void> deleteRecord(String petId, String recordId) async {
+    await firestore
+        .collection('pets')
+        .doc(petId)
+        .collection('medical_history')
+        .doc(recordId)
+        .delete();
+  }
+
+   // Actualizar Historial Medico
+  Future<void> updateRecord(
+      String petId, String recordId, Map<String, dynamic> data) async {
+    await firestore
+        .collection('pets')
+        .doc(petId)
+        .collection('medical_history')
+        .doc(recordId)
+        .update(data);
+  }
+
+  //Vacunas
+
+  // Función para obtener el stream de la subcolección de vacunas
+  Stream<QuerySnapshot> getVaccinesStream(String petId) {
+    return firestore
+        .collection('pets')
+        .doc(petId)
+        .collection('vaccinations')
+        .snapshots();
+  }
+
+  //Función para agregar vacunas
+  Future<void> addVaccine(String petId, Map<String, dynamic> data) async {
+    await firestore.collection('pets').doc(petId).collection('vaccinations').add(data);
+  }
+
+   // Eliminar vacuna
+  Future<void> deleteVaccine(String petId, String vaccineId) async {
+    await firestore
+        .collection('pets')
+        .doc(petId)
+        .collection('vaccinations')
+        .doc(vaccineId)
+        .delete();
+  }
+
+  // Actualizar vacuna
+  Future<void> updateVaccine(
+      String petId, String vaccineId, Map<String, dynamic> data) async {
+    await firestore
+        .collection('pets')
+        .doc(petId)
+        .collection('vaccinations')
+        .doc(vaccineId)
+        .update(data);
+  }
+
 }

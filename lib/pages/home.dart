@@ -5,9 +5,7 @@ import 'package:authclase/services/store_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -27,7 +25,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lista de Personas'),
+        title: const Center( child: Text('Lista de Personas')),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(60),
           child: Padding(
@@ -64,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
         stream: _firebaseService.getPersonsStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
@@ -76,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
           }).toList();
 
           if (personsData == null || personsData.isEmpty) {
-            return Center(child: Text('No hay personas disponibles'));
+            return const Center(child: Text('No hay personas disponibles'));
           }
 
           return ListView.builder(
@@ -87,9 +85,9 @@ class _MyHomePageState extends State<MyHomePage> {
               final personName = person['name'];
 
               return ListTile(
-                title: Text(personName ?? 'Sin nombre'),
+                title: Text(personName),
                 subtitle: Text('ID: $personId'),
-                leading: Icon(Icons.person),
+                leading: const Icon(Icons.person),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -103,6 +101,10 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed:(){},
+        child: Icon(Icons.add),
+        ),
     );
   }
 }

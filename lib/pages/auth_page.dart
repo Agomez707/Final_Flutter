@@ -16,7 +16,7 @@ const AuthPage({super.key});
           stream: FirebaseAuth.instance.authStateChanges(), 
           builder: (context, snapshot){
             if(snapshot.hasData){
-              return MyHomePage(title: 'Home',);
+              return MyHomePage();
             }else{
               return LoginPage();
             }

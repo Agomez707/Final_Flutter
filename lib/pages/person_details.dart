@@ -1,4 +1,4 @@
-import 'package:authclase/pages/pets_details.dart';
+//import 'package:authclase/pages/pets_details.dart';
 import 'package:authclase/pages/pets_page.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -74,8 +74,7 @@ class PersonDetailsScreen extends StatelessWidget {
                           return ListTile(
                             title: Text(petName),
                             subtitle: Text('$petBreed'),
-                            leading: petData.containsKey('photo_url') &&
-                                    petData['photo_url'] != null
+                            leading: petData['photo_url'] != null
                                 ? CircleAvatar(
                                     backgroundImage:
                                         NetworkImage(petData['photo_url']),
@@ -106,6 +105,10 @@ class PersonDetailsScreen extends StatelessWidget {
           );
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed:(){},
+        child: Icon(Icons.pets),
+        ),
     );
   }
 }

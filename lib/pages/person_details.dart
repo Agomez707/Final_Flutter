@@ -1,5 +1,7 @@
 //import 'package:authclase/pages/pets_details.dart';
+import 'package:authclase/pages/add/add_pet_page.dart';
 import 'package:authclase/pages/pets_page.dart';
+import 'package:authclase/pages/edits/edit_pet.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:authclase/services/store_services.dart';
@@ -8,10 +10,7 @@ class PersonDetailsScreen extends StatelessWidget {
   final String personId;
   final FirebaseService firebaseService = FirebaseService();
 
-  PersonDetailsScreen({
-    super.key, 
-    required this.personId
-  });
+  PersonDetailsScreen({super.key, required this.personId});
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +18,8 @@ class PersonDetailsScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Detalles de la Persona'),
       ),
-      body: FutureBuilder<DocumentSnapshot>(
-        future: firebaseService.getPersonByID(personId),
+      body: StreamBuilder<DocumentSnapshot>(
+        stream: firebaseService.getPersonByID(personId),
         builder: (context, snapshot) {
           final personData = snapshot.data?.data() as Map<String, dynamic>?;
 
@@ -70,6 +69,7 @@ class PersonDetailsScreen extends StatelessWidget {
                               petsData[index].data() as Map<String, dynamic>;
                           final petName = petData['name'] ?? 'Sin nombre';
                           final petBreed = petData['breed'] ?? 'Sin raza';
+                          final petIdActual = petsData[index].id;
 
                           return ListTile(
                             title: Text(petName),
@@ -80,7 +80,7 @@ class PersonDetailsScreen extends StatelessWidget {
                                         NetworkImage(petData['photo_url']),
                                     radius: 24,
                                   )
-                                : CircleAvatar(
+                                : const CircleAvatar(
                                     child: Icon(Icons.pets),
                                     radius: 24,
                                   ),
@@ -90,10 +90,76 @@ class PersonDetailsScreen extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => PetDetailsScreenDos(
-                                      petId: petsData[index].id),
+                                      petId: petIdActual),
                                 ),
                               );
                             },
+                            trailing: PopupMenuButton<String>(
+                              onSelected: (value) async {
+                                if (value == 'edit') {
+                                  // Navegar a la pantalla de edición
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          EditPetScreen(petId: petIdActual),
+                                    ),
+                                  );
+                                } else if (value == 'delete') {
+                                  // Confirmar eliminación
+                                  final confirm = await showDialog<bool>(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: const Center( child: Text('Eliminar Mascota')),
+                                      content: const Text(
+                                          '¿Estás seguro de que deseas eliminar esta mascota?'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, false),
+                                          child: const Text('Cancelar'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, true),
+                                          child: const Text('Eliminar'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+
+                                  if (confirm == true) {
+                                    try {
+                                      await FirebaseService()
+                                          .deletePet(personId, petIdActual);
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                            content: Text(
+                                                'Mascota eliminada correctamente')),
+                                      );
+                                    } catch (e) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                'Error al eliminar la mascota: $e')),
+                                      );
+                                    }
+                                  }
+                                }
+                              },
+                              itemBuilder: (context) => [
+                                const PopupMenuItem(
+                                  value: 'edit',
+                                  child: Text('Editar'),
+                                ),
+                                const PopupMenuItem(
+                                  value: 'delete',
+                                  child: Text('Eliminar'),
+                                ),
+                              ],
+                            ),
                           );
                         },
                       );
@@ -106,9 +172,16 @@ class PersonDetailsScreen extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed:(){},
-        child: Icon(Icons.pets),
-        ),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddPetScreen(personId: personId),
+            ),
+          );
+        },
+        child: const Icon(Icons.pets),
+      ),
     );
   }
 }

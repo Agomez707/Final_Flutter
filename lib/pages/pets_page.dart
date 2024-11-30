@@ -1,8 +1,8 @@
 import 'package:authclase/components/formatted_date.dart';
-import 'package:authclase/pages/add_Vacuna_page.dart';
-import 'package:authclase/pages/add_mediacal_history_page.dart';
-import 'package:authclase/pages/edit_medical_history.dart';
-import 'package:authclase/pages/edit_vacuna.dart';
+import 'package:authclase/pages/add/add_Vacuna_page.dart';
+import 'package:authclase/pages/add/add_mediacal_history_page.dart';
+import 'package:authclase/pages/edits/edit_medical_history.dart';
+import 'package:authclase/pages/edits/edit_vacuna.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:authclase/services/store_services.dart';
@@ -317,7 +317,7 @@ class _PetDetailsScreenState extends State<PetDetailsScreenDos> {
                 );
               },
             ),
-            Scaffold(),
+            const Scaffold(),
           ],
         ),
         floatingActionButton: _currentTabIndex == 1 ||

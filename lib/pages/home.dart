@@ -1,3 +1,4 @@
+import 'package:authclase/pages/add/add_person_page.dart';
 import 'package:authclase/pages/person_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -12,9 +13,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  
-  void signUserOut()
-  {
+  void signUserOut() {
     FirebaseAuth.instance.signOut();
   }
 
@@ -25,7 +24,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Center( child: Text('Lista de Personas')),
+        title: const Center(child: Text('Lista de Personas')),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(60),
           child: Padding(
@@ -50,12 +49,12 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         actions: [
           IconButton(
-          icon: const Icon(
-            Icons.logout,
-            color: Color.fromARGB(255, 114, 11, 114),
-          ),
-          onPressed:signUserOut,
-        )
+            icon: const Icon(
+              Icons.logout,
+              color: Color.fromARGB(255, 114, 11, 114),
+            ),
+            onPressed: signUserOut,
+          )
         ],
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -92,7 +91,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => PersonDetailsScreen(personId: personId),
+                      builder: (context) =>
+                          PersonDetailsScreen(personId: personId),
                     ),
                   );
                 },
@@ -102,9 +102,16 @@ class _MyHomePageState extends State<MyHomePage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed:(){},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddPersonScreen(),
+            ),
+          );
+        },
         child: Icon(Icons.add),
-        ),
+      ),
     );
   }
 }

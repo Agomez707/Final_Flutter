@@ -7,26 +7,109 @@ class FirebaseService {
 
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-   // Función para obtener la lista de personas
+  //Personas
+
+  // Función para obtener la lista de personas
   Stream<QuerySnapshot> getPersonsStream() {
-    return firestore.collection('persons').snapshots();
+    return firestore
+    .collection('persons')
+    .snapshots();
   }
 
   // Función para obtener los datos de una persona específica por ID
-  Future<DocumentSnapshot> getPersonByID(String personId) {
-    return firestore.collection('persons').doc(personId).get();
+  Stream<DocumentSnapshot> getPersonByID(String personId) {
+    return firestore
+    .collection('persons')
+    .doc(personId)
+    .snapshots();
   }
 
   // Función para obtener los datos de las mascotas de una persona
-  Future<List<DocumentSnapshot>> getPetsDetails(List<DocumentReference> petReferences) async {
-    final petsSnapshots = await Future.wait(petReferences.map((ref) => ref.get()).toList());
+  Future<List<DocumentSnapshot>> getPetsDetails(
+      List<DocumentReference> petReferences) async {
+    final petsSnapshots =
+        await Future.wait(petReferences.map((ref) => ref.get()).toList());
     return petsSnapshots;
   }
 
+  // Agregar una nueva Persona
+Future<void> addPerson(String id, Map<String, dynamic> personData) async {
+  await firestore
+  .collection('persons')
+  .doc(id)
+  .set(personData);
+}
+
+
+
+  //Mascotas
+
   // Función para obtener los detalles de una mascota específica
   Future<DocumentSnapshot> getPetDetails(String petId) {
-    return firestore.collection('pets').doc(petId).get();
+    return firestore
+    .collection('pets')
+    .doc(petId)
+    .get();
   }
+
+  // Obtener mascotas de una persona en tiempo real
+  Stream<DocumentSnapshot> getPersonStream(String personId) {
+    return firestore
+    .collection('persons')
+    .doc(personId)
+    .snapshots();
+  }
+
+  // Obtener los datos de una lista de referencias de mascotas
+  Future<List<DocumentSnapshot>> getPetsData(
+      List<DocumentReference> petRefs) async {
+    return await Future.wait(petRefs.map((ref) => ref.get()));
+  }
+
+// Agregar una nueva mascota
+  Future<String> addPet(Map<String, dynamic> petData) async {
+    final petDoc = await firestore
+    .collection('pets')
+    .add(petData);
+    return petDoc.id;
+  }
+
+// Actualizar el array de mascotas en una persona
+  Future<void> addPetToPerson(String personId, DocumentReference petRef) async {
+    await firestore
+    .collection('persons')
+    .doc(personId)
+    .update({
+      'pets': FieldValue.arrayUnion([petRef]),
+    });
+  }
+
+// Editar detalles de una mascota
+  Future<void> updatePet(String petId, Map<String, dynamic> updatedData) async {
+    await firestore
+    .collection('pets')
+    .doc(petId)
+    .update(updatedData);
+  }
+
+  // Eliminar una mascota (y su referencia en una persona)
+  Future<void> deletePet(String personId, String petId) async {
+    // Eliminar la referencia de la mascota en 'persons'
+    final petRef = firestore.doc('pets/$petId');
+    await firestore
+    .collection('persons')
+    .doc(personId)
+    .update({
+      'pets': FieldValue.arrayRemove([petRef]),
+    });
+  // Eliminar la mascota de la colección 'pets'
+    await firestore
+    .collection('pets')
+    .doc(petId)
+    .delete();
+  }
+
+
 
   //Historial Medico
 
@@ -38,13 +121,17 @@ class FirebaseService {
         .collection('medical_history')
         .snapshots();
   }
-  
+
   //Función para agregar Hitorial medicos
   Future<void> addMedicalRecord(String petId, Map<String, dynamic> data) async {
-    await firestore.collection('pets').doc(petId).collection('medical_history').add(data);
+    await firestore
+        .collection('pets')
+        .doc(petId)
+        .collection('medical_history')
+        .add(data);
   }
 
-   // Eliminar Historial Medico
+  // Eliminar Historial Medico
   Future<void> deleteRecord(String petId, String recordId) async {
     await firestore
         .collection('pets')
@@ -54,7 +141,7 @@ class FirebaseService {
         .delete();
   }
 
-   // Actualizar Historial Medico
+  // Actualizar Historial Medico
   Future<void> updateRecord(
       String petId, String recordId, Map<String, dynamic> data) async {
     await firestore
@@ -78,10 +165,14 @@ class FirebaseService {
 
   //Función para agregar vacunas
   Future<void> addVaccine(String petId, Map<String, dynamic> data) async {
-    await firestore.collection('pets').doc(petId).collection('vaccinations').add(data);
+    await firestore
+        .collection('pets')
+        .doc(petId)
+        .collection('vaccinations')
+        .add(data);
   }
 
-   // Eliminar vacuna
+  // Eliminar vacuna
   Future<void> deleteVaccine(String petId, String vaccineId) async {
     await firestore
         .collection('pets')
@@ -101,5 +192,4 @@ class FirebaseService {
         .doc(vaccineId)
         .update(data);
   }
-
 }

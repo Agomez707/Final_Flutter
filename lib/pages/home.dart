@@ -162,8 +162,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           );
         },
-        child: Icon(Icons.add),
+        backgroundColor: const Color.fromARGB(255, 226, 124, 240),
+        child: const Icon(Icons.add),
       ),
+
     );
   }
 }

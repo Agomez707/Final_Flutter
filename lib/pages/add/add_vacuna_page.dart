@@ -42,9 +42,8 @@ class AddVaccineScreenState extends State<AddVaccineScreen> {
                 controller: _nameController,
                 label: 'Nombre de la vacuna',
                 icon: Icons.vaccines_outlined,
-                validator: (value) =>
-                    value == null || value.isEmpty 
-                    ? 'Ingrese el nombre de la vacuna' 
+                validator: (value) => value == null || value.isEmpty
+                    ? 'Ingrese el nombre de la vacuna'
                     : null,
               ),
               const SizedBox(height: 10),
@@ -58,9 +57,8 @@ class AddVaccineScreenState extends State<AddVaccineScreen> {
                   _dateController.text =
                       DateFormat('dd/MM/yyyy').format(pickedDate);
                 },
-                validator: (value) =>
-                    value == null || value.isEmpty 
-                    ? 'Ingrese la fecha de aplicación' 
+                validator: (value) => value == null || value.isEmpty
+                    ? 'Ingrese la fecha de aplicación'
                     : null,
               ),
               const SizedBox(height: 10),
@@ -74,15 +72,19 @@ class AddVaccineScreenState extends State<AddVaccineScreen> {
                   _nextDateController.text =
                       DateFormat('dd/MM/yyyy').format(pickedDate);
                 },
-                validator: (value) =>
-                    value == null || value.isEmpty 
-                    ? 'Ingrese la fecha de la proxima aplicación' 
+                validator: (value) => value == null || value.isEmpty
+                    ? 'Ingrese la fecha de la proxima aplicación'
                     : null,
               ),
               const SizedBox(height: 20),
               Center(
                 child: ElevatedButton(
                   onPressed: _submitForm,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 226, 124, 240),
+                    foregroundColor: Colors.black,
+                    
+                  ),
                   child: const Text('Guardar'),
                 ),
               ),
@@ -92,7 +94,6 @@ class AddVaccineScreenState extends State<AddVaccineScreen> {
       ),
     );
   }
-
 
   void _submitForm() async {
     if (!_formKey.currentState!.validate()) {

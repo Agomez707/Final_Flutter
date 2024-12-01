@@ -134,6 +134,11 @@ class AddPersonScreenState extends State<AddPersonScreen> {
               else
                 ElevatedButton(
                   onPressed: _addPerson,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 226, 124, 240),
+                    foregroundColor: Colors.black,
+                    
+                  ),
                   child: const Text('Guardar Persona'),
                 ),
             ],

@@ -142,6 +142,11 @@ class EditMedicalRecordScreenState extends State<EditMedicalRecordScreen> {
                 Center(
                   child: ElevatedButton(
                     onPressed: _submitForm,
+                    style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 226, 124, 240),
+                    foregroundColor: Colors.black,
+                    
+                  ),
                     child: const Text('Guardar Cambios'),
                   ),
                 ),

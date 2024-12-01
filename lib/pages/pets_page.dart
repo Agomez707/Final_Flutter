@@ -342,6 +342,7 @@ class _PetDetailsScreenState extends State<PetDetailsScreenDos> {
                     );
                   }
                 },
+                backgroundColor: const Color.fromARGB(255, 226, 124, 240),
                 child: const Icon(Icons.add),
               )
             : null,

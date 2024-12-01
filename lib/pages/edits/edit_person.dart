@@ -147,6 +147,10 @@ class EditPersonScreenState extends State<EditPersonScreen> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _updatePerson,
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 226, 124, 240),
+                    foregroundColor: Colors.black,
+                  ),
                 child: const Text('Guardar Cambios'),
               ),
             ],

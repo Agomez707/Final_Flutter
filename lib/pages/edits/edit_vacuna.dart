@@ -166,6 +166,11 @@ class EditVaccineScreenState extends State<EditVaccineScreen> {
               Center(
                 child: ElevatedButton(
                   onPressed: _editVaccine,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 226, 124, 240),
+                    foregroundColor: Colors.black,
+                    
+                  ),
                   child: const Text('Guardar Cambios'),
                 ),
               ),

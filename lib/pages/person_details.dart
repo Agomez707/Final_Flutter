@@ -180,6 +180,7 @@ class PersonDetailsScreen extends StatelessWidget {
             ),
           );
         },
+        backgroundColor: const Color.fromARGB(255, 226, 124, 240),
         child: const Icon(Icons.pets),
       ),
     );

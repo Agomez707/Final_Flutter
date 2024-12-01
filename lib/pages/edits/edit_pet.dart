@@ -182,6 +182,11 @@ class EditPetScreenState extends State<EditPetScreen> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _updatePet,
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 226, 124, 240),
+                    foregroundColor: Colors.black,
+                    
+                  ),
                 child: const Text('Guardar Cambios'),
               ),
             ],

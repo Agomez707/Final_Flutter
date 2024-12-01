@@ -1,4 +1,5 @@
 import 'package:authclase/pages/add/add_person_page.dart';
+import 'package:authclase/pages/edits/edit_person.dart';
 import 'package:authclase/pages/person_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -96,6 +97,57 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   );
                 },
+                trailing: PopupMenuButton(
+                  onSelected: (value) async {
+                    if (value == 'edit') {
+                      // Ir a la pantalla de edición
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              EditPersonScreen(personId: personId),
+                        ),
+                      );
+                    } else if (value == 'delete') {
+                      final confirm = await showDialog<bool>(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Center(
+                              child: Text('Confirmar eliminación')),
+                          content: const Text(
+                              '¿Está seguro de que desea eliminar esta Persona y sus mascotas?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, false),
+                              child: const Text('Cancelar'),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, true),
+                              child: const Text('Eliminar'),
+                            ),
+                          ],
+                        ),
+                      );
+                      if (confirm == true) {
+                        await FirebaseService().deletePersonAndPets(personId);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Persona eliminada')),
+                        );
+                      }
+                    }
+                  },
+                  //opciones de menu desplegable
+                  itemBuilder: (context) => const [
+                    PopupMenuItem(
+                      value: 'edit',
+                      child: Text('Editar'),
+                    ),
+                    PopupMenuItem(
+                      value: 'delete',
+                      child: Text('Eliminar'),
+                    ),
+                  ],
+                ),
               );
             },
           );

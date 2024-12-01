@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:authclase/services/store_services.dart';
+import 'package:authclase/components/custom_widget.dart';
 
 class AddPersonScreen extends StatefulWidget {
   const AddPersonScreen({
@@ -76,46 +77,34 @@ class AddPersonScreenState extends State<AddPersonScreen> {
           key: _formKey,
           child: ListView(
             children: [
-              TextFormField(
+              CustomWidgets.buildTextField(
                 controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Nombre',
-                  border: OutlineInputBorder(),
-                ),
+                label: 'Nombre',
                 validator: (value) => value == null || value.isEmpty
                     ? 'Ingrese un nombre válido'
                     : null,
               ),
               const SizedBox(height: 16),
-              TextFormField(
+              CustomWidgets.buildTextField(
                 controller: _idController,
-                decoration: const InputDecoration(
-                  labelText: 'DNI',
-                  border: OutlineInputBorder(),
-                ),
+                label: 'DNI',
                 validator: (value) => value == null || value.isEmpty
                     ? 'Ingrese un DNI válido'
                     : null,
               ),
               const SizedBox(height: 16),
-              TextFormField(
+              CustomWidgets.buildTextField(
                 controller: _addressController,
-                decoration: const InputDecoration(
-                  labelText: 'Dirección',
-                  border: OutlineInputBorder(),
-                ),
+                label: 'Dirección',
                 validator: (value) => value == null || value.isEmpty
                     ? 'Ingrese una dirección válido'
                     : null,
               ),
               const SizedBox(height: 16),
-              TextFormField(
+              CustomWidgets.buildTextField(
                 controller: _phoneController,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Telefono',
-                  border: OutlineInputBorder(),
-                ),
+                label: 'Telefono',
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Ingrese un telefono válida';
@@ -127,12 +116,9 @@ class AddPersonScreenState extends State<AddPersonScreen> {
                 },
               ),
               const SizedBox(height: 16),
-              TextFormField(
+              CustomWidgets.buildTextField(
                 controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(),
-                ),
+                label: 'Email',
                 validator: (value) => value == null || value.isEmpty
                     ? 'Ingrese una email válido'
                     : null,

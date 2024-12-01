@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:authclase/services/store_services.dart';
+import 'package:authclase/components/custom_widget.dart';
 import 'package:intl/intl.dart';
 
 class AddVaccineScreen extends StatefulWidget {
@@ -37,19 +38,18 @@ class AddVaccineScreenState extends State<AddVaccineScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildTextField(
+              CustomWidgets.buildTextField(
                 controller: _nameController,
                 label: 'Nombre de la vacuna',
                 icon: Icons.vaccines_outlined,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Ingrese el nombre de la vacuna';
-                  }
-                  return null;
-                },
+                validator: (value) =>
+                    value == null || value.isEmpty 
+                    ? 'Ingrese el nombre de la vacuna' 
+                    : null,
               ),
               const SizedBox(height: 10),
-              _buildDateField(
+              CustomWidgets.buildDateField(
+                context: context,
                 controller: _dateController,
                 label: 'Fecha de aplicación',
                 icon: Icons.date_range,
@@ -58,9 +58,14 @@ class AddVaccineScreenState extends State<AddVaccineScreen> {
                   _dateController.text =
                       DateFormat('dd/MM/yyyy').format(pickedDate);
                 },
+                validator: (value) =>
+                    value == null || value.isEmpty 
+                    ? 'Ingrese la fecha de aplicación' 
+                    : null,
               ),
               const SizedBox(height: 10),
-              _buildDateField(
+              CustomWidgets.buildDateField(
+                context: context,
                 controller: _nextDateController,
                 label: 'Próxima aplicación',
                 icon: Icons.date_range,
@@ -69,6 +74,10 @@ class AddVaccineScreenState extends State<AddVaccineScreen> {
                   _nextDateController.text =
                       DateFormat('dd/MM/yyyy').format(pickedDate);
                 },
+                validator: (value) =>
+                    value == null || value.isEmpty 
+                    ? 'Ingrese la fecha de la proxima aplicación' 
+                    : null,
               ),
               const SizedBox(height: 20),
               Center(
@@ -84,50 +93,6 @@ class AddVaccineScreenState extends State<AddVaccineScreen> {
     );
   }
 
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    required IconData icon,
-    required String? Function(String?) validator,
-  }) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        border: const OutlineInputBorder(),
-        prefixIcon: Icon(icon),
-      ),
-      validator: validator,
-    );
-  }
-
-  Widget _buildDateField({
-    required TextEditingController controller,
-    required String label,
-    required IconData icon,
-    required Function(DateTime) onDateSelected,
-  }) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        border: const OutlineInputBorder(),
-        prefixIcon: Icon(icon),
-      ),
-      readOnly: true,
-      onTap: () async {
-        DateTime? pickedDate = await showDatePicker(
-          context: context,
-          initialDate: DateTime.now(),
-          firstDate: DateTime(2000),
-          lastDate: DateTime(2100),
-        );
-        if (pickedDate != null) {
-          onDateSelected(pickedDate);
-        }
-      },
-    );
-  }
 
   void _submitForm() async {
     if (!_formKey.currentState!.validate()) {

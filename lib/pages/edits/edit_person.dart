@@ -2,27 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:authclase/services/store_services.dart';
 import 'package:authclase/components/custom_widget.dart';
 
+class EditPersonScreen extends StatefulWidget {
+  final String personId;
 
-class EditPetScreen extends StatefulWidget {
-  final String petId;
-
-  const EditPetScreen({
+  const EditPersonScreen({
     super.key,
-    required this.petId
+    required this.personId
     });
 
   @override
-  EditPetScreenState createState() => EditPetScreenState();
+  EditPersonScreenState createState() => EditPersonScreenState();
 }
 
-class EditPetScreenState extends State<EditPetScreen> {
+class EditPersonScreenState extends State<EditPersonScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
-  late TextEditingController _breedController;
-  late TextEditingController _colorController;
-  late TextEditingController _speciesController;
-  late TextEditingController _birthYearController;
-  late TextEditingController _sexController;
+  late TextEditingController _addressController;
+  late TextEditingController _emailController;
+  late TextEditingController _phoneController;
 
   bool _isLoading = false;
 
@@ -38,17 +35,15 @@ class EditPetScreenState extends State<EditPetScreen> {
     });
 
     try {
-      final petData = await FirebaseService().getPetDetails(widget.petId);
+      final personData = await FirebaseService().getPerson(widget.personId);
 
-      if (petData.exists) {
-        final data = petData.data() as Map<String, dynamic>;
+      if (personData.exists) {
+        final data = personData.data() as Map<String, dynamic>;
         _nameController = TextEditingController(text: data['name'] ?? '');
-        _breedController = TextEditingController(text: data['breed'] ?? '');
-        _colorController = TextEditingController(text: data['color'] ?? '');
-        _speciesController = TextEditingController(text: data['species'] ?? '');
-        _sexController = TextEditingController(text: data['sex'] ?? '');
-        _birthYearController =
-            TextEditingController(text: (data['birth_age'] ?? '').toString());
+        _addressController = TextEditingController(text: data['address'] ?? '');
+        _emailController = TextEditingController(text: data['email'] ?? '');
+        _phoneController =
+            TextEditingController(text: (data['phone'] ?? '').toString());
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -61,7 +56,7 @@ class EditPetScreenState extends State<EditPetScreen> {
     }
   }
 
-  void _updatePet() async {
+  void _updatePerson() async {
     if (_formKey.currentState?.validate() != true) return;
 
     setState(() {
@@ -69,20 +64,18 @@ class EditPetScreenState extends State<EditPetScreen> {
     });
 
     try {
-      await FirebaseService().updatePet(
-        widget.petId,
+      await FirebaseService().updatePerson(
+        widget.personId,
         {
           'name': _nameController.text.trim(),
-          'breed': _breedController.text.trim(),
-          'color': _colorController.text.trim(),
-          'species': _speciesController.text.trim(),
-          'sex': _sexController.text.trim(),
-          'birth_age': int.parse(_birthYearController.text.trim()),
+          'address': _addressController.text.trim(),
+          'email': _emailController.text.trim(),
+          'phone': int.parse(_phoneController.text.trim()),
         },
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Mascota actualizada con éxito')),
+        const SnackBar(content: Text('Persona actualizada con éxito')),
       );
       Navigator.pop(context);
     } catch (e) {
@@ -106,7 +99,7 @@ class EditPetScreenState extends State<EditPetScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Editar Mascota'),
+        title: const Text('Editar datos de Persona'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -117,7 +110,6 @@ class EditPetScreenState extends State<EditPetScreen> {
               CustomWidgets.buildTextField(
                 controller: _nameController,
                 label: 'Nombre',
-                icon: Icons.pets,
                 validator: (value) =>
                     value == null || value.isEmpty 
                     ? 'Ingrese un nombre' 
@@ -125,53 +117,30 @@ class EditPetScreenState extends State<EditPetScreen> {
               ),
               const SizedBox(height: 16),
               CustomWidgets.buildTextField(
-                controller: _breedController,
-                label: 'Raza',
-                icon: Icons.pets,
+                controller: _addressController,
+                label: 'Dirección',
                 validator: (value) =>
                     value == null || value.isEmpty 
-                    ? 'Ingrese la Raza' 
+                    ? 'Ingrese una dirección' 
                     : null,
               ),
               const SizedBox(height: 16),
               CustomWidgets.buildTextField(
-                controller: _colorController,
-                label: 'Color',
-                icon: Icons.pets,
+                controller: _emailController,
+                label: 'Email',
                 validator: (value) =>
                     value == null || value.isEmpty 
-                    ? 'Ingrese el color' 
+                    ? 'Ingrese un email' 
                     : null,
               ),
               const SizedBox(height: 16),
               CustomWidgets.buildTextField(
-                controller: _speciesController,
-                label: 'Especie',
-                icon: Icons.pets,
-                validator: (value) =>
-                    value == null || value.isEmpty 
-                    ? 'Ingrese la especie' 
-                    : null,
-              ),
-              const SizedBox(height: 16),
-              CustomWidgets.buildTextField(
-                controller: _sexController,
-                label: 'Sexo',
-                icon: Icons.pets,
-                validator: (value) =>
-                    value == null || value.isEmpty 
-                    ? 'Ingrese el sexo' 
-                    : null,
-              ),
-              const SizedBox(height: 16),
-              CustomWidgets.buildTextField(
-                controller: _birthYearController,
+                controller: _phoneController,
                 keyboardType: TextInputType.number,
-                label: 'Año de Nacimiento',
-                icon: Icons.date_range,
+                label: 'Telefono',
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Ingrese el año de nacimiento';
+                    return 'Ingrese un telefono válida';
                   }
                   if (int.tryParse(value) == null) {
                     return 'Ingrese un número válido';
@@ -181,7 +150,7 @@ class EditPetScreenState extends State<EditPetScreen> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _updatePet,
+                onPressed: _updatePerson,
                 child: const Text('Guardar Cambios'),
               ),
             ],

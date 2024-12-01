@@ -26,7 +26,7 @@ class _PetDetailsScreenState extends State<PetDetailsScreenDos> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 4, // Número de pestañas
+      length: 3, // Número de pestañas
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Detalles de la Mascota'),
@@ -40,7 +40,6 @@ class _PetDetailsScreenState extends State<PetDetailsScreenDos> {
               Tab(text: 'Detalles', icon: Icon(Icons.info_outline)),
               Tab(text: 'Vacunas', icon: Icon(Icons.vaccines)),
               Tab(text: 'Historial', icon: Icon(Icons.history)),
-              Tab(text: 'Turnos', icon: Icon(Icons.note_add)),
             ],
             labelColor: const Color.fromARGB(255, 119, 1, 134),
           ),
@@ -317,12 +316,9 @@ class _PetDetailsScreenState extends State<PetDetailsScreenDos> {
                 );
               },
             ),
-            const Scaffold(),
           ],
         ),
-        floatingActionButton: _currentTabIndex == 1 ||
-                _currentTabIndex == 2 ||
-                _currentTabIndex == 3
+        floatingActionButton: _currentTabIndex == 1 || _currentTabIndex == 2
             ? FloatingActionButton(
                 onPressed: () {
                   if (_currentTabIndex == 1) {

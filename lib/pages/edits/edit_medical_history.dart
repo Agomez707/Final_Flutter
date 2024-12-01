@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:authclase/services/store_services.dart';
 import 'package:intl/intl.dart';
+import 'package:authclase/components/custom_widget.dart';
 
 class EditMedicalRecordScreen extends StatefulWidget {
   final String petId;
@@ -89,7 +90,7 @@ class EditMedicalRecordScreenState extends State<EditMedicalRecordScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildTextField(
+                CustomWidgets.buildTextField(
                   controller: _reasonController,
                   label: 'Razón de visita',
                   validator: (value) => value == null || value.isEmpty
@@ -97,7 +98,7 @@ class EditMedicalRecordScreenState extends State<EditMedicalRecordScreen> {
                       : null,
                 ),
                 const SizedBox(height: 10),
-                _buildTextField(
+                CustomWidgets.buildTextField(
                   controller: _diagnosisController,
                   label: 'Diagnóstico',
                   validator: (value) => value == null || value.isEmpty
@@ -105,7 +106,7 @@ class EditMedicalRecordScreenState extends State<EditMedicalRecordScreen> {
                       : null,
                 ),
                 const SizedBox(height: 10),
-                _buildTextField(
+                CustomWidgets.buildTextField(
                   controller: _treatmentController,
                   label: 'Tratamiento',
                   validator: (value) => value == null || value.isEmpty
@@ -113,10 +114,12 @@ class EditMedicalRecordScreenState extends State<EditMedicalRecordScreen> {
                       : null,
                 ),
                 const SizedBox(height: 10),
-                _buildTextField(
+                CustomWidgets.buildTextField(
                   controller: _notesController,
                   label: 'Notas',
-                  maxLines: 4,
+                  validator: (value) => value == null || value.isEmpty
+                      ? 'Ingrese una Nota'
+                      : null,
                 ),
                 const SizedBox(height: 10),
                 _buildDatePickerField(
@@ -127,6 +130,9 @@ class EditMedicalRecordScreenState extends State<EditMedicalRecordScreen> {
                       _selectedDate = pickedDate;
                     });
                   },
+                  validator: (value) => value == null || value.isEmpty
+                      ? 'Ingrese una fecha'
+                      : null,
                 ),
                 const SizedBox(height: 20),
                 Center(
@@ -143,26 +149,11 @@ class EditMedicalRecordScreenState extends State<EditMedicalRecordScreen> {
     );
   }
 
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    int maxLines = 1,
-    String? Function(String?)? validator,
-  }) {
-    return TextFormField(
-      controller: controller,
-      maxLines: maxLines,
-      decoration: InputDecoration(
-        labelText: label,
-        border: const OutlineInputBorder(),
-      ),
-      validator: validator,
-    );
-  }
 
   Widget _buildDatePickerField({
     required TextEditingController controller,
     required String label,
+    required String? Function(String?) validator,
     required Function(DateTime pickedDate) onDateSelected,
   }) {
     return TextFormField(
@@ -173,6 +164,7 @@ class EditMedicalRecordScreenState extends State<EditMedicalRecordScreen> {
         prefixIcon: const Icon(Icons.date_range),
         border: const OutlineInputBorder(),
       ),
+      validator: validator,
       onTap: () async {
         DateTime? pickedDate = await showDatePicker(
           context: context,

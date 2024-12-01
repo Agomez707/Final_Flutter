@@ -16,6 +16,13 @@ class FirebaseService {
     .snapshots();
   }
 
+  Future<DocumentSnapshot> getPerson(String personId) {
+    return firestore
+    .collection('persons')
+    .doc(personId)
+    .get();
+  }
+
   // Función para obtener los datos de una persona específica por ID
   Stream<DocumentSnapshot> getPersonByID(String personId) {
     return firestore
@@ -32,6 +39,14 @@ class FirebaseService {
     return petsSnapshots;
   }
 
+  // Editar una nueva Persona
+  Future<void> updatePerson(String personId, Map<String, dynamic> updatedData) async {
+    await firestore
+    .collection('persons')
+    .doc(personId)
+    .update(updatedData);
+  }
+
   // Agregar una nueva Persona
 Future<void> addPerson(String id, Map<String, dynamic> personData) async {
   await firestore
@@ -39,6 +54,46 @@ Future<void> addPerson(String id, Map<String, dynamic> personData) async {
   .doc(id)
   .set(personData);
 }
+
+Future<void> deletePersonAndPets(String personId) async {
+    try {
+      // Referencia a la persona
+      DocumentReference personRef = firestore.collection('persons').doc(personId);
+
+      // Obtén los datos de la persona
+      DocumentSnapshot personSnapshot = await personRef.get();
+
+      if (!personSnapshot.exists) {
+        throw Exception("La persona con ID $personId no existe.");
+      }
+
+      // Obtén la lista de mascotas (puede ser lista de referencias o IDs)
+      List<dynamic> pets = personSnapshot['pets'] ?? [];
+
+      // Inicia una transacción para realizar las eliminaciones
+      await firestore.runTransaction((transaction) async {
+        // Elimina todas las mascotas relacionadas
+        for (var pet in pets) {
+          if (pet is String) {
+            // Si es un ID de mascota
+            transaction.delete(firestore.collection('pets').doc(pet));
+          } else if (pet is DocumentReference) {
+            // Si es una referencia a un documento
+            transaction.delete(pet);
+          }
+        }
+
+        // Elimina la persona
+        transaction.delete(personRef);
+      });
+
+      print('Persona y sus mascotas eliminadas correctamente.');
+    } catch (e) {
+      print('Error al eliminar persona y mascotas: $e');
+      rethrow; // Re-lanzar el error para que el llamado maneje la excepción si es necesario
+    }
+  }
+
 
 
 

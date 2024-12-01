@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:authclase/services/store_services.dart';
-//import 'package:intl/intl.dart';
+import 'package:authclase/components/custom_widget.dart';
 
 class AddPetScreen extends StatefulWidget {
   final String personId;
@@ -41,87 +41,96 @@ class AddPetScreenState extends State<AddPetScreen> {
       appBar: AppBar(title: const Text('Agregar Mascota')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              _buildTextField(
-                controller: _nameController,
-                label: 'Nombre de la Mascota',
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Ingrese el nombre de la mascota';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 10),
-              _buildTextField(
-                controller: _breedController,
-                label: 'Raza',
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Ingrese la raza';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 10),
-              _buildTextField(
-                controller: _colorController,
-                label: 'Color',
-              ),
-              const SizedBox(height: 10),
-              _buildTextField(
-                controller: _sexController,
-                label: 'Sexo',
-              ),
-              const SizedBox(height: 10),
-              _buildTextField(
-                controller: _speciesController,
-                label: 'Especie',
-              ),
-              const SizedBox(height: 10),
-              _buildTextField(
-                controller: _birthYearController,
-                label: 'Año de nacimiento',
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Ingrese el año de nacimiento';
-                  }
-                  if (int.tryParse(value) == null) {
-                    return 'Ingrese un año válido';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _submitForm,
-                child: const Text('Guardar Mascota'),
-              ),
-            ],
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                CustomWidgets.buildTextField(
+                  controller: _nameController,
+                  label: 'Nombre de la Mascota',
+                  icon: Icons.pets,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Ingrese el nombre de la mascota';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 10),
+                CustomWidgets.buildTextField(
+                  controller: _breedController,
+                  label: 'Raza',
+                  icon: Icons.pets,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Ingrese la raza';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 10),
+                CustomWidgets.buildTextField(
+                  controller: _colorController,
+                  label: 'Color',
+                  icon: Icons.pets,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Ingrese el color';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 10),
+                CustomWidgets.buildTextField(
+                  controller: _sexController,
+                  label: 'Sexo',
+                  icon: Icons.pets,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Ingrese el sexo';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 10),
+                CustomWidgets.buildTextField(
+                  controller: _speciesController,
+                  label: 'Especie',
+                  icon: Icons.pets,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Ingrese la especie';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 10),
+                CustomWidgets.buildTextField(
+                  controller: _birthYearController,
+                  label: 'Año de nacimiento',
+                  icon: Icons.pets,
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Ingrese el año de nacimiento';
+                    }
+                    if (int.tryParse(value) == null) {
+                      return 'Ingrese un año válido';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _submitForm,
+                  child: const Text('Guardar Mascota'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    TextInputType keyboardType = TextInputType.text,
-    String? Function(String?)? validator,
-  }) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: keyboardType,
-      decoration: InputDecoration(
-        labelText: label,
-        border: const OutlineInputBorder(),
-      ),
-      validator: validator,
     );
   }
 

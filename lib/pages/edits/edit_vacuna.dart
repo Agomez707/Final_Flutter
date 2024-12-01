@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:authclase/services/store_services.dart';
 import 'package:intl/intl.dart';
+import 'package:authclase/components/custom_widget.dart';
 
 class EditVaccineScreen extends StatefulWidget {
   final String petId;
@@ -94,13 +95,10 @@ class EditVaccineScreenState extends State<EditVaccineScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextFormField(
+              CustomWidgets.buildTextField(
                 controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Nombre de la vacuna',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.vaccines_outlined),
-                ),
+                label: 'Nombre de la vacuna',
+                icon: Icons.vaccines_outlined,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor, ingrese el nombre de la vacuna';

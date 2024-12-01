@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:authclase/services/store_services.dart';
+import 'package:authclase/components/custom_widget.dart';
 import 'package:intl/intl.dart';
 
 class AddMedicalRecordScreen extends StatefulWidget {
@@ -50,7 +51,7 @@ class AddMedicalRecordScreenState extends State<AddMedicalRecordScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildTextField(
+                CustomWidgets.buildTextField(
                   controller: _reasonController,
                   label: 'Razón de visita',
                   validator: (value) {
@@ -61,7 +62,7 @@ class AddMedicalRecordScreenState extends State<AddMedicalRecordScreen> {
                   },
                 ),
                 const SizedBox(height: 10),
-                _buildTextField(
+                CustomWidgets.buildTextField(
                   controller: _diagnosisController,
                   label: 'Diagnóstico',
                   validator: (value) {
@@ -72,7 +73,7 @@ class AddMedicalRecordScreenState extends State<AddMedicalRecordScreen> {
                   },
                 ),
                 const SizedBox(height: 10),
-                _buildTextField(
+                CustomWidgets.buildTextField(
                   controller: _treatmentController,
                   label: 'Tratamiento',
                   validator: (value) {
@@ -83,10 +84,9 @@ class AddMedicalRecordScreenState extends State<AddMedicalRecordScreen> {
                   },
                 ),
                 const SizedBox(height: 10),
-                _buildTextField(
+                CustomWidgets.buildTextField(
                   controller: _notesController,
                   label: 'Notas',
-                  maxLines: 4,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Ingrese las notas';
@@ -95,13 +95,19 @@ class AddMedicalRecordScreenState extends State<AddMedicalRecordScreen> {
                   },
                 ),
                 const SizedBox(height: 10),
-                _buildDatePickerField(
+                buildDatePickerField(
                   controller: _dateController,
                   label: 'Fecha de visita',
                   onDateSelected: (pickedDate) {
                     setState(() {
                       _selectedDate = pickedDate;
                     });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Ingrese una fecha';
+                    }
+                    return null;
                   },
                 ),
                 const SizedBox(height: 20),
@@ -119,26 +125,10 @@ class AddMedicalRecordScreenState extends State<AddMedicalRecordScreen> {
     );
   }
 
-  Widget _buildTextField({
+  Widget buildDatePickerField({
     required TextEditingController controller,
     required String label,
-    int maxLines = 1,
-    String? Function(String?)? validator,
-  }) {
-    return TextFormField(
-      controller: controller,
-      maxLines: maxLines,
-      decoration: InputDecoration(
-        labelText: label,
-        border: const OutlineInputBorder(),
-      ),
-      validator: validator,
-    );
-  }
-
-  Widget _buildDatePickerField({
-    required TextEditingController controller,
-    required String label,
+    required String? Function(String?) validator,
     required Function(DateTime pickedDate) onDateSelected,
   }) {
     return TextFormField(
@@ -149,6 +139,7 @@ class AddMedicalRecordScreenState extends State<AddMedicalRecordScreen> {
         border: const OutlineInputBorder(),
       ),
       readOnly: true,
+      validator: validator,
       onTap: () async {
         DateTime? pickedDate = await showDatePicker(
           context: context,
@@ -190,7 +181,8 @@ class AddMedicalRecordScreenState extends State<AddMedicalRecordScreen> {
 
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Historial médico agregado correctamente')),
+        const SnackBar(
+            content: Text('Historial médico agregado correctamente')),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

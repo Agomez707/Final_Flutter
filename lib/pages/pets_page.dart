@@ -10,10 +10,7 @@ import 'package:authclase/services/store_services.dart';
 class PetDetailsScreenDos extends StatefulWidget {
   final String petId;
 
-  PetDetailsScreenDos({
-    super.key, 
-    required this.petId
-    });
+  PetDetailsScreenDos({super.key, required this.petId});
 
   @override
   State<PetDetailsScreenDos> createState() => _PetDetailsScreenState();
@@ -81,11 +78,15 @@ class _PetDetailsScreenState extends State<PetDetailsScreenDos> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Center(
-                        child: petImageUrl != null
-                            ? Image.network(petImageUrl,
-                                height: 200, fit: BoxFit.cover)
-                            : const Icon(Icons.pets, size: 100),
-                      ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: petImageUrl != null
+                                ? Image.network(petImageUrl,
+                                    height: 200, 
+                                    fit: BoxFit.cover)
+                                : const Icon(Icons.pets, size: 100),
+                          ),
+                        ),
                       const SizedBox(height: 16),
                       Text('Nombre: $petName',
                           style: const TextStyle(
@@ -167,7 +168,8 @@ class _PetDetailsScreenState extends State<PetDetailsScreenDos> {
                             final confirm = await showDialog<bool>(
                               context: context,
                               builder: (context) => AlertDialog(
-                                title: const Center( child: Text('Confirmar eliminación')),
+                                title: const Center(
+                                    child: Text('Confirmar eliminación')),
                                 content: const Text(
                                     '¿Está seguro de que desea eliminar esta vacuna?'),
                                 actions: [
@@ -250,7 +252,7 @@ class _PetDetailsScreenState extends State<PetDetailsScreenDos> {
                         onSelected: (value) async {
                           if (value == 'edit') {
                             // Ir a la pantalla de edición
-                          Navigator.push(
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => EditMedicalRecordScreen(
@@ -262,17 +264,16 @@ class _PetDetailsScreenState extends State<PetDetailsScreenDos> {
                                     'treatment': treatment,
                                     'notes': notes,
                                     'date': date,
-                                  },                                  
+                                  },
                                 ),
                               ),
                             );
-
-
                           } else if (value == 'delete') {
                             final confirm = await showDialog<bool>(
                               context: context,
                               builder: (context) => AlertDialog(
-                                title: const Center( child: Text('Confirmar eliminación')),
+                                title: const Center(
+                                    child: Text('Confirmar eliminación')),
                                 content: const Text(
                                     '¿Está seguro de que desea eliminar este Historial?'),
                                 actions: [

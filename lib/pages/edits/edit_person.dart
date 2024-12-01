@@ -5,10 +5,7 @@ import 'package:authclase/components/custom_widget.dart';
 class EditPersonScreen extends StatefulWidget {
   final String personId;
 
-  const EditPersonScreen({
-    super.key,
-    required this.personId
-    });
+  const EditPersonScreen({super.key, required this.personId});
 
   @override
   EditPersonScreenState createState() => EditPersonScreenState();
@@ -110,27 +107,17 @@ class EditPersonScreenState extends State<EditPersonScreen> {
               CustomWidgets.buildTextField(
                 controller: _nameController,
                 label: 'Nombre',
+                icon: Icons.person,
                 validator: (value) =>
-                    value == null || value.isEmpty 
-                    ? 'Ingrese un nombre' 
-                    : null,
+                    value == null || value.isEmpty ? 'Ingrese un nombre' : null,
               ),
               const SizedBox(height: 16),
               CustomWidgets.buildTextField(
                 controller: _addressController,
                 label: 'Dirección',
-                validator: (value) =>
-                    value == null || value.isEmpty 
-                    ? 'Ingrese una dirección' 
-                    : null,
-              ),
-              const SizedBox(height: 16),
-              CustomWidgets.buildTextField(
-                controller: _emailController,
-                label: 'Email',
-                validator: (value) =>
-                    value == null || value.isEmpty 
-                    ? 'Ingrese un email' 
+                icon: Icons.location_city,
+                validator: (value) => value == null || value.isEmpty
+                    ? 'Ingrese una dirección'
                     : null,
               ),
               const SizedBox(height: 16),
@@ -138,6 +125,7 @@ class EditPersonScreenState extends State<EditPersonScreen> {
                 controller: _phoneController,
                 keyboardType: TextInputType.number,
                 label: 'Telefono',
+                icon: Icons.phone,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Ingrese un telefono válida';
@@ -147,6 +135,14 @@ class EditPersonScreenState extends State<EditPersonScreen> {
                   }
                   return null;
                 },
+              ),
+              const SizedBox(height: 16),
+              CustomWidgets.buildTextField(
+                controller: _emailController,
+                label: 'Email',
+                icon: Icons.email,
+                validator: (value) =>
+                    value == null || value.isEmpty ? 'Ingrese un email' : null,
               ),
               const SizedBox(height: 20),
               ElevatedButton(

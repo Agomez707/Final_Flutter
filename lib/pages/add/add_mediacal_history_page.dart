@@ -54,6 +54,7 @@ class AddMedicalRecordScreenState extends State<AddMedicalRecordScreen> {
                 CustomWidgets.buildTextField(
                   controller: _reasonController,
                   label: 'Razón de visita',
+                  icon: Icons.note_alt_outlined,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Ingrese la razón de la visita';
@@ -65,6 +66,7 @@ class AddMedicalRecordScreenState extends State<AddMedicalRecordScreen> {
                 CustomWidgets.buildTextField(
                   controller: _diagnosisController,
                   label: 'Diagnóstico',
+                  icon: Icons.note_alt_outlined,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Ingrese el diagnóstico';
@@ -76,6 +78,7 @@ class AddMedicalRecordScreenState extends State<AddMedicalRecordScreen> {
                 CustomWidgets.buildTextField(
                   controller: _treatmentController,
                   label: 'Tratamiento',
+                  icon: Icons.note_alt_outlined,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Ingrese el tratamiento';
@@ -87,6 +90,7 @@ class AddMedicalRecordScreenState extends State<AddMedicalRecordScreen> {
                 CustomWidgets.buildTextField(
                   controller: _notesController,
                   label: 'Notas',
+                  icon: Icons.note_alt_outlined,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Ingrese las notas';

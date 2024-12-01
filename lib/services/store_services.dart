@@ -12,23 +12,24 @@ class FirebaseService {
   // Función para obtener la lista de personas
   Stream<QuerySnapshot> getPersonsStream() {
     return firestore
-    .collection('persons')
-    .snapshots();
+      .collection('persons')
+      .snapshots();
   }
 
+  // Función para obtener los datos de una persona específica por ID
   Future<DocumentSnapshot> getPerson(String personId) {
     return firestore
-    .collection('persons')
-    .doc(personId)
-    .get();
+      .collection('persons')
+      .doc(personId)
+      .get();
   }
 
   // Función para obtener los datos de una persona específica por ID
   Stream<DocumentSnapshot> getPersonByID(String personId) {
     return firestore
-    .collection('persons')
-    .doc(personId)
-    .snapshots();
+      .collection('persons')
+      .doc(personId)
+      .snapshots();
   }
 
   // Función para obtener los datos de las mascotas de una persona
@@ -40,25 +41,27 @@ class FirebaseService {
   }
 
   // Editar una nueva Persona
-  Future<void> updatePerson(String personId, Map<String, dynamic> updatedData) async {
+  Future<void> updatePerson(
+      String personId, Map<String, dynamic> updatedData) async {
     await firestore
-    .collection('persons')
-    .doc(personId)
-    .update(updatedData);
+      .collection('persons')
+      .doc(personId)
+      .update(updatedData);
   }
 
   // Agregar una nueva Persona
-Future<void> addPerson(String id, Map<String, dynamic> personData) async {
-  await firestore
-  .collection('persons')
-  .doc(id)
-  .set(personData);
-}
+  Future<void> addPerson(String id, Map<String, dynamic> personData) async {
+    await firestore
+      .collection('persons')
+      .doc(id)
+      .set(personData);
+  }
 
-Future<void> deletePersonAndPets(String personId) async {
+  Future<void> deletePersonAndPets(String personId) async {
     try {
       // Referencia a la persona
-      DocumentReference personRef = firestore.collection('persons').doc(personId);
+      DocumentReference personRef =
+          firestore.collection('persons').doc(personId);
 
       // Obtén los datos de la persona
       DocumentSnapshot personSnapshot = await personRef.get();
@@ -90,29 +93,26 @@ Future<void> deletePersonAndPets(String personId) async {
       print('Persona y sus mascotas eliminadas correctamente.');
     } catch (e) {
       print('Error al eliminar persona y mascotas: $e');
-      rethrow; // Re-lanzar el error para que el llamado maneje la excepción si es necesario
+      rethrow; 
     }
   }
-
-
-
 
   //Mascotas
 
   // Función para obtener los detalles de una mascota específica
   Future<DocumentSnapshot> getPetDetails(String petId) {
     return firestore
-    .collection('pets')
-    .doc(petId)
-    .get();
+      .collection('pets')
+      .doc(petId)
+      .get();
   }
 
   // Obtener mascotas de una persona en tiempo real
   Stream<DocumentSnapshot> getPersonStream(String personId) {
     return firestore
-    .collection('persons')
-    .doc(personId)
-    .snapshots();
+      .collection('persons')
+      .doc(personId)
+      .snapshots();
   }
 
   // Obtener los datos de una lista de referencias de mascotas
@@ -124,47 +124,47 @@ Future<void> deletePersonAndPets(String personId) async {
 // Agregar una nueva mascota
   Future<String> addPet(Map<String, dynamic> petData) async {
     final petDoc = await firestore
-    .collection('pets')
-    .add(petData);
+      .collection('pets')
+      .add(petData);
+
     return petDoc.id;
   }
 
 // Actualizar el array de mascotas en una persona
   Future<void> addPetToPerson(String personId, DocumentReference petRef) async {
     await firestore
-    .collection('persons')
-    .doc(personId)
-    .update({
-      'pets': FieldValue.arrayUnion([petRef]),
+      .collection('persons')
+      .doc(personId)
+      .update({
+        'pets': FieldValue.arrayUnion([petRef]),
     });
   }
 
 // Editar detalles de una mascota
   Future<void> updatePet(String petId, Map<String, dynamic> updatedData) async {
     await firestore
-    .collection('pets')
-    .doc(petId)
-    .update(updatedData);
+      .collection('pets')
+      .doc(petId)
+      .update(updatedData);
   }
 
   // Eliminar una mascota (y su referencia en una persona)
   Future<void> deletePet(String personId, String petId) async {
     // Eliminar la referencia de la mascota en 'persons'
     final petRef = firestore.doc('pets/$petId');
+
     await firestore
-    .collection('persons')
-    .doc(personId)
-    .update({
-      'pets': FieldValue.arrayRemove([petRef]),
+      .collection('persons')
+      .doc(personId)
+      .update({
+        'pets': FieldValue.arrayRemove([petRef]),
     });
-  // Eliminar la mascota de la colección 'pets'
+    // Eliminar la mascota de la colección 'pets'
     await firestore
-    .collection('pets')
-    .doc(petId)
-    .delete();
+      .collection('pets')
+      .doc(petId)
+      .delete();
   }
-
-
 
   //Historial Medico
 

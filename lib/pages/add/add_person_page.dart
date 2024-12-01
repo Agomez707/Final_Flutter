@@ -80,6 +80,7 @@ class AddPersonScreenState extends State<AddPersonScreen> {
               CustomWidgets.buildTextField(
                 controller: _nameController,
                 label: 'Nombre',
+                icon: Icons.person,
                 validator: (value) => value == null || value.isEmpty
                     ? 'Ingrese un nombre válido'
                     : null,
@@ -88,6 +89,7 @@ class AddPersonScreenState extends State<AddPersonScreen> {
               CustomWidgets.buildTextField(
                 controller: _idController,
                 label: 'DNI',
+                icon: Icons.person,
                 validator: (value) => value == null || value.isEmpty
                     ? 'Ingrese un DNI válido'
                     : null,
@@ -96,6 +98,7 @@ class AddPersonScreenState extends State<AddPersonScreen> {
               CustomWidgets.buildTextField(
                 controller: _addressController,
                 label: 'Dirección',
+                icon: Icons.location_city,
                 validator: (value) => value == null || value.isEmpty
                     ? 'Ingrese una dirección válido'
                     : null,
@@ -105,6 +108,7 @@ class AddPersonScreenState extends State<AddPersonScreen> {
                 controller: _phoneController,
                 keyboardType: TextInputType.number,
                 label: 'Telefono',
+                icon: Icons.phone,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Ingrese un telefono válida';
@@ -119,6 +123,7 @@ class AddPersonScreenState extends State<AddPersonScreen> {
               CustomWidgets.buildTextField(
                 controller: _emailController,
                 label: 'Email',
+                icon: Icons.email,
                 validator: (value) => value == null || value.isEmpty
                     ? 'Ingrese una email válido'
                     : null,

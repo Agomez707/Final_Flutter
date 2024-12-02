@@ -88,6 +88,7 @@ class AddPersonScreenState extends State<AddPersonScreen> {
               const SizedBox(height: 16),
               CustomWidgets.buildTextField(
                 controller: _idController,
+                keyboardType: TextInputType.number,
                 label: 'DNI',
                 icon: Icons.person,
                 validator: (value) => value == null || value.isEmpty

@@ -5,7 +5,10 @@ import 'package:authclase/components/custom_widget.dart';
 class EditPersonScreen extends StatefulWidget {
   final String personId;
 
-  const EditPersonScreen({super.key, required this.personId});
+  const EditPersonScreen({
+    super.key, 
+    required this.personId
+    });
 
   @override
   EditPersonScreenState createState() => EditPersonScreenState();
@@ -109,7 +112,9 @@ class EditPersonScreenState extends State<EditPersonScreen> {
                 label: 'Nombre',
                 icon: Icons.person,
                 validator: (value) =>
-                    value == null || value.isEmpty ? 'Ingrese un nombre' : null,
+                    value == null || value.isEmpty 
+                    ? 'Ingrese un nombre' 
+                    : null,
               ),
               const SizedBox(height: 16),
               CustomWidgets.buildTextField(
@@ -142,7 +147,9 @@ class EditPersonScreenState extends State<EditPersonScreen> {
                 label: 'Email',
                 icon: Icons.email,
                 validator: (value) =>
-                    value == null || value.isEmpty ? 'Ingrese un email' : null,
+                    value == null || value.isEmpty 
+                    ? 'Ingrese un email' 
+                    : null,
               ),
               const SizedBox(height: 20),
               ElevatedButton(

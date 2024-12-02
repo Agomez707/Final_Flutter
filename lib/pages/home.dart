@@ -158,7 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => AddPersonScreen(),
+              builder: (context) => const AddPersonScreen(),
             ),
           );
         },

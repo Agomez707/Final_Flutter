@@ -10,7 +10,10 @@ import 'package:authclase/services/store_services.dart';
 class PetDetailsScreenDos extends StatefulWidget {
   final String petId;
 
-  PetDetailsScreenDos({super.key, required this.petId});
+  PetDetailsScreenDos({
+    super.key, 
+    required this.petId
+    });
 
   @override
   State<PetDetailsScreenDos> createState() => _PetDetailsScreenState();
@@ -78,15 +81,14 @@ class _PetDetailsScreenState extends State<PetDetailsScreenDos> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Center(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: petImageUrl != null
-                                ? Image.network(petImageUrl,
-                                    height: 200, 
-                                    fit: BoxFit.cover)
-                                : const Icon(Icons.pets, size: 100),
-                          ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: petImageUrl != null
+                              ? Image.network(petImageUrl,
+                                  height: 200, fit: BoxFit.cover)
+                              : const Icon(Icons.pets, size: 100),
                         ),
+                      ),
                       const SizedBox(height: 16),
                       Text('Nombre: $petName',
                           style: const TextStyle(
@@ -187,12 +189,12 @@ class _PetDetailsScreenState extends State<PetDetailsScreenDos> {
                               ),
                             );
                             if (confirm == true) {
-                              await FirebaseService()
-                                  .deleteVaccine(widget.petId, vaccineId);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                    content: Text('Vacuna eliminada')),
+                                    content: Text('Eliminando vacuna...')),
                               );
+                              await FirebaseService()
+                                  .deleteVaccine(widget.petId, vaccineId);
                             }
                           }
                         },
@@ -291,12 +293,12 @@ class _PetDetailsScreenState extends State<PetDetailsScreenDos> {
                               ),
                             );
                             if (confirm == true) {
-                              await FirebaseService()
-                                  .deleteRecord(widget.petId, recordId);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                    content: Text('Historial eliminada')),
+                                    content: Text('Eliminando historial...')),
                               );
+                              await FirebaseService()
+                                  .deleteRecord(widget.petId, recordId);
                             }
                           }
                         },

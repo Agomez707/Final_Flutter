@@ -10,7 +10,10 @@ class PersonDetailsScreen extends StatelessWidget {
   final String personId;
   final FirebaseService firebaseService = FirebaseService();
 
-  PersonDetailsScreen({super.key, required this.personId});
+  PersonDetailsScreen({
+    super.key, 
+    required this.personId
+    });
 
   @override
   Widget build(BuildContext context) {
@@ -70,19 +73,20 @@ class PersonDetailsScreen extends StatelessWidget {
                           final petName = petData['name'] ?? 'Sin nombre';
                           final petBreed = petData['breed'] ?? 'Sin raza';
                           final petIdActual = petsData[index].id;
+                          final petImage = petData['photo_url'];
 
                           return ListTile(
                             title: Text(petName),
                             subtitle: Text('$petBreed'),
-                            leading: petData['photo_url'] != null
+                            leading: petImage != null
                                 ? CircleAvatar(
                                     backgroundImage:
-                                        NetworkImage(petData['photo_url']),
+                                        NetworkImage(petImage),
                                     radius: 24,
                                   )
                                 : const CircleAvatar(
-                                    child: Icon(Icons.pets),
                                     radius: 24,
+                                    child: Icon(Icons.pets),
                                   ),
                             onTap: () {
                               // Navegar a la pantalla de detalles de la mascota

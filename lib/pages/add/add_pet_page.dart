@@ -19,6 +19,7 @@ class AddPetScreenState extends State<AddPetScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _breedController = TextEditingController();
+  final _imageController = TextEditingController();
   final _colorController = TextEditingController();
   final _sexController = TextEditingController();
   final _speciesController = TextEditingController();
@@ -28,6 +29,7 @@ class AddPetScreenState extends State<AddPetScreen> {
   void dispose() {
     _nameController.dispose();
     _breedController.dispose();
+    _imageController.dispose();
     _colorController.dispose();
     _sexController.dispose();
     _speciesController.dispose();
@@ -77,6 +79,18 @@ class AddPetScreenState extends State<AddPetScreen> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Ingrese el color';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 10),
+                CustomWidgets.buildTextField(
+                  controller: _imageController,
+                  label: 'Url de imagen',
+                  icon: Icons.pets,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Ingrese una imagen';
                     }
                     return null;
                   },
@@ -147,6 +161,7 @@ class AddPetScreenState extends State<AddPetScreen> {
     try {
       final name = _nameController.text.trim();
       final breed = _breedController.text.trim();
+      final image = _imageController.text.trim();
       final color = _colorController.text.trim();
       final sex = _sexController.text.trim();
       final species = _speciesController.text.trim();
@@ -156,6 +171,7 @@ class AddPetScreenState extends State<AddPetScreen> {
       final petId = await FirebaseService().addPet({
         'name': name,
         'breed': breed,
+        'photo_url': image,
         'color': color,
         'sex': sex,
         'species': species,
